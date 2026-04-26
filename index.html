@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="km">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puppy Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Khmer OS Battambang', sans-serif;
+            margin: 0;
+            background-color: #fdfaf5;
+            color: #5d4037;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0px;
+        }
+
+        header {
+            background: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            letter-spacing: 1px;
+            color: #ffab40;
+            /* ពណ៌ Logo លេចធ្លោ */
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .cart-icon {
+            cursor: pointer;
+            position: relative;
+            font-size: 24px;
+            color: #ffab40;
+        }
+
+        #cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+        }
+
+        .login-btn {
+            cursor: pointer;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            background: #ffab40;
+            transition: 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #ff8f00;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            width: 380px;
+            position: relative;
+            animation: fadeIn 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #ffab40;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .btn-login-submit {
+            width: 100%;
+            background: #ffab40;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+
+        .btn-login-submit:hover {
+            background: #ff8f00;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 200px;
+            cursor: pointer;
+            font-size: 22px;
+            color: #999;
+            transition: 0.2s;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .product-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .product-card h3 {
+            font-size: 20px;
+            margin: 20px 0 8px;
+            color: #5d4037;
+        }
+
+        .product-card p {
+            color: #ffab40;
+            font-weight: bold;
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        .btn-add {
+            background: #ffab40;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .btn-add:hover {
+            background: #ff8f00;
+        }
+
+        /* Sidebar Cart */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -500px;
+            width: 380px;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transition: 0.4s;
+            z-index: 1000;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>Pup Paradise</h1>
+        </div>
+        <div class="nav-right">
+            <span class="login-btn" onclick="openLogin()">Login</span>
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="modal-overlay" id="loginModal">
+        <div class="login-box">
+            <i class="fas fa-times close-modal" onclick="closeLogin()"></i>
+            <h2>Login</h2>
+            <form onsubmit="handleLogin(event)">
+                <input type="email" placeholder="Email or Phone Number" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit" class="btn-login-submit">Login</button>
+                <p style="text-align: center; font-size: 14px; color: #777; margin-top: 20px;">Don't have an account? <a
+                        href="#" style="color: #ffab40; text-decoration: none;">Sign Up</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 20px; color: #5d4037;">កូនឆ្កែ</h2>
+        <div class="product-grid" id="product-list">
+        </div>
+    </div>
+
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+            <h3>Shopping Cart</h3>
+            <i class="fas fa-times" style="cursor:pointer; font-size: 20px; color: #999;" onclick="toggleCart()"></i>
+        </div>
+        <div id="cart-items-list" style="flex-grow:1; overflow-y:auto; margin-top:20px;">
+        </div>
+        <div style="border-top: 1px solid #eee; padding-top: 20px;">
+            <div
+                style="display:flex; justify-content:space-between; font-weight:bold; font-size: 18px; margin-bottom:20px; color: #5d4037;">
+                <span>Total:</span> <span id="total-amount">$0.00</span>
+            </div>
+            <button
+                style="width:100%; background:#28a745; color:white; border:none; padding:15px; border-radius:8px; cursor:pointer; font-size: 17px; font-weight: bold; transition: 0.3s;"
+                onclick="alert('Proceeding to checkout!')">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: "Golden Retriever Puppy", price: 350.00, img: "1.jpg" },
+            { id: 2, name: "Beagle Puppy", price: 280.00, img: "2.jpg" },
+            { id: 3, name: "Bulldog Puppy", price: 420.00, img: "3.jpg" },
+            { id: 4, name: "Poodle Puppy", price: 300.00, img: "4.jpg" }
+        ];
+
+        let cart = [];
+
+        function renderProducts() {
+            document.getElementById('product-list').innerHTML = products.map(p => `
+                <div class="product-card">
+                    <img src="${p.img}">
+                    <h3>${p.name}</h3>
+                    <p>$${p.price.toFixed(2)}</p>
+                    <button class="btn-add" onclick="addToCart(${p.id})">Add to Cart</button>
+                </div>
+            `).join('');
+        }
+
+        // Login Functions
+        function openLogin() { document.getElementById('loginModal').style.display = 'flex'; }
+        function closeLogin() { document.getElementById('loginModal').style.display = 'none'; }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            alert("Login successful!");
+            closeLogin();
+            document.querySelector('.login-btn').innerText = "My Account";
+        }
+
+        // Cart Functions
+        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+
+        function addToCart(id) {
+            const p = products.find(x => x.id === id);
+            cart.push(p);
+            updateCart();
+        }
+
+        function updateCart() {
+            document.getElementById('cart-count').innerText = cart.length;
+            let total = 0;
+            document.getElementById('cart-items-list').innerHTML = cart.map(item => {
+                total += item.price;
+                return `<div style="display:flex; gap:15px; margin-bottom:15px; border-bottom:1px solid #f9f9f9; padding-bottom:10px; align-items: center;">
+                    <img src="${item.img}" width="50" style="border-radius: 5px;">
+                    <div><div style="font-size:14px">${item.name}</div><b>$${item.price.toFixed(2)}</b></div>
+                </div>`;
+            }).join('');
+            document.getElementById('total-amount').innerText = `$${total.toFixed(2)}`;
+        }
+
+        renderProducts();
+    </script>
+</body>
+
+</html>
